@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دردشة الأصدقاء</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #e9eff5;
+}
+.container {
+  max-width: 500px;
+  margin: 35px auto;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px #0002;
+}
+header {
+  background: #087e72;
+  color: white;
+  text-align: center;
+  padding: 18px;
+  font-size: 23px;
+}
+#login {
+  padding: 25px;
+  text-align: center;
+}
+input, button {
+  box-sizing: border-box;
+  padding: 13px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+input {
+  border: 1px solid #ccc;
+  width: 100%;
+  margin: 8px 0;
+}
+button {
+  border: none;
+  background: #087e72;
+  color: white;
+  cursor: pointer;
+}
+#login button { width: 100%; }
+#chat { display: none; }
+#messages {
+  height: 350px;
+  overflow-y: auto;
+  padding: 15px;
+  background: #f5f7f8;
+}
+.message {
+  background: #d9f5df;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+#composer {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+}
+#composer input { margin: 0; min-width: 0; }
+#composer button { flex-shrink: 0; }
+#userLabel { padding: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>دردشة الأصدقاء 💬</header>
+
+  <div id="login">
+    <h3>مرحباً بك في الشات</h3>
+    <p>اكتب اسمك للبدء</p>
+    <input id="username" placeholder="اكتب اسم الدخول">
+    <button onclick="login()">دخول الشات</button>
+  </div>
+
+  <div id="chat">
+    <div id="userLabel"></div>
+    <div id="messages"></div>
+    <div id="composer">
+      <input id="messageInput" placeholder="اكتب رسالتك...">
+      <button onclick="sendMessage()">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentUser = "";
+
+function login() {
+  const name = document.getElementById("username").value.trim();
+  if (!name) {
+    alert("يرجى كتابة اسم الدخول");
+    return;
+  }
+
+  currentUser = name;
+  document.getElementById("login").style.display = "none";
+  document.getElementById("chat").style.display = "block";
+  document.getElementById("userLabel").textContent =
+    "أهلاً بك: " + currentUser;
+  document.getElementById("messageInput").focus();
+}
+
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const message = input.value.trim();
+  if (!message) return;
+
+  const box = document.createElement("div");
+  box.className = "message";
+
+  const sender = document.createElement("strong");
+  sender.textContent = currentUser + ": ";
+
+  const content = document.createElement("span");
+  content.textContent = message;
+
+  box.append(sender, content);
+  document.getElementById("messages").appendChild(box);
+  input.value = "";
+  document.getElementById("messages").scrollTop =
+    document.getElementById("messages").scrollHeight;
+}
+
+document.getElementById("messageInput").addEventListener(
+  "keydown", event => {
+    if (event.key === "Enter") sendMessage();
+  }
+);
+
+document.getElementById("username").addEventListener(
+  "keydown", event => {
+    if (event.key === "Enter") login();
+  }
+);
+</script>
+
+</body>
+</html>
